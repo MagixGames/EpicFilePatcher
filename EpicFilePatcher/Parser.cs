@@ -69,6 +69,9 @@ namespace EpicFilePatcher
             }
             ExitLoop:
 
+            // writes extra byte because bug
+            writer.Write(0x00);
+
             if (EpicFilePatcher.WriteDebugBTs)
             {
                 writer.OutPDBData(Output.FullName + ".bt");
