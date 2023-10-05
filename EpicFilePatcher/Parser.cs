@@ -83,10 +83,11 @@ namespace EpicFilePatcher
                         break;
                 }
             }
-            ExitLoop:
+        ExitLoop:
 
             // writes extra byte because bug
-            writer.Write(0x00);
+            // writer.Write(0x00);
+            writer.Flush();
 
             if (EpicFilePatcher.WriteDebugBTs)
             {
