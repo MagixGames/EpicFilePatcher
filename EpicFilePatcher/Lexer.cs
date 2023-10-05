@@ -116,7 +116,6 @@ namespace EpicFilePatcher
             currentLine = currentLine.Substring(position);
             position = 0;
             TokenizeNextLine(ref tokens);
-            
         }
 
         public void HandleOperations(ref List<Token> tokens)
