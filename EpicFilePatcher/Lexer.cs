@@ -148,21 +148,22 @@ namespace EpicFilePatcher
         public void HandleOptions(ref List<Token> tokens)
         {
             Token token = ScanKeyword();
+            tokens.Add(token);
+            SkipWhitespace();
             switch (token.Type)
             {
                 case TokenType.INCLUDE:
                     {
+                        tokens.RemoveAt(tokens.Count - 1);
                         HandleInclude(ref tokens);
                     }
                     break;
                 case TokenType.OFFSET:
                     {
-                        tokens.Add(token);
                         tokens.Add(ScanNumber());
                     }
                     break;
                 default:
-                    tokens.Add(token);
                     break;
             }
         }
