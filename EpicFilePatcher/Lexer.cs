@@ -88,6 +88,8 @@ namespace EpicFilePatcher
             {
                 Consume();
                 HandleOptions(ref tokens);
+
+                TrySubInstruction(ref tokens);
                 return;
             }
 
@@ -101,6 +103,20 @@ namespace EpicFilePatcher
             tokens.Add(ScanKeyword());
 
             HandleOperations(ref tokens);
+
+            TrySubInstruction(ref tokens);
+        }
+
+        public void TrySubInstruction(ref List<Token> tokens)
+        {
+            SkipWhitespace();
+            if (!(Peek() == ';')) return;
+
+            Consume();
+            currentLine = currentLine.Substring(position);
+            position = 0;
+            TokenizeNextLine(ref tokens);
+            
         }
 
         public void HandleOperations(ref List<Token> tokens)
@@ -109,6 +125,10 @@ namespace EpicFilePatcher
             SkipWhitespace();
             switch (type)
             {
+                case TokenType.INT16:
+                case TokenType.INT32:
+                case TokenType.INT64:
+
                 case TokenType.GOTO:
                     {
                         tokens.Add(ScanNumber());
@@ -125,14 +145,6 @@ namespace EpicFilePatcher
                             SkipWhitespace();
                         }
                         tokens.Add(new Token(TokenType.BYTEARRAY, array.ToArray()));
-                    }
-                    break;
-
-                case TokenType.INT16:
-                case TokenType.INT32:
-                case TokenType.INT64:
-                    {
-                        tokens.Add(ScanNumber());
                     }
                     break;
 
