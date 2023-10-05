@@ -23,7 +23,7 @@ namespace EpicFilePatcher.Handlers
 
             for (int i = 0; i < data.Length; i++)
             {
-                stream.Write(data[i]);
+                stream.Write(data[i], Parser.Endian);
             }
 
             return true;

@@ -27,12 +27,18 @@ namespace EpicFilePatcher
         public static Dictionary<string, TokenType> STRING_TO_TYPE = new Dictionary<string, TokenType>(StringComparer.OrdinalIgnoreCase)
         {
             { "write", TokenType.WRITE },
+
+            { "int16", TokenType.INT16 },
+            { "int32", TokenType.INT32 },
+            { "int64", TokenType.INT64 },
+
             { "writestring", TokenType.WRITESTRING },
             { "writestringn", TokenType.WRITESTRING_N },
             { "append", TokenType.APPEND },
 
             { "include", TokenType.INCLUDE },
             { "goto", TokenType.GOTO },
+            { "offset", TokenType.OFFSET },
 
             { "littleendian", TokenType.SLE },
             { "little", TokenType.SLE },
@@ -122,6 +128,14 @@ namespace EpicFilePatcher
                     }
                     break;
 
+                case TokenType.INT16:
+                case TokenType.INT32:
+                case TokenType.INT64:
+                    {
+                        tokens.Add(ScanNumber());
+                    }
+                    break;
+
                 case TokenType.WRITESTRING_N:
                 case TokenType.WRITESTRING:
                     {
@@ -139,6 +153,12 @@ namespace EpicFilePatcher
                 case TokenType.INCLUDE:
                     {
                         HandleInclude(ref tokens);
+                    }
+                    break;
+                case TokenType.OFFSET:
+                    {
+                        tokens.Add(token);
+                        tokens.Add(ScanNumber());
                     }
                     break;
                 default:

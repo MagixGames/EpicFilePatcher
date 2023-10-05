@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace EpicFilePatcher
 {
-    internal class Parser
+    public class Parser
     {
         public FileInfo Output;
         public FileInfo Original;
@@ -18,7 +18,10 @@ namespace EpicFilePatcher
         private int position;
         private List<Token> tokens;
 
-        private Endian currentEndian;
+        private static Endian currentEndian;
+        private static long currentGotoOffset;
+        public static Endian Endian { get { return currentEndian; } }
+        public static long GotoOffset { get { return currentGotoOffset; } }
         private bool atEnd => tokens[position].Type == TokenType.EOF;
         private Token previous => tokens[position - 1];
 
@@ -26,6 +29,8 @@ namespace EpicFilePatcher
         {
             Original = original;
             Output = new FileInfo(original.FullName.Replace(original.Extension, string.Empty) + ".patched" + original.Extension);
+            currentEndian = Endian.Little; // default
+            currentGotoOffset = 0; // default
         }
 
         public void Execute(ref List<Token> tokens)
@@ -53,7 +58,10 @@ namespace EpicFilePatcher
                         currentEndian = Endian.Little; 
                         break;
                     case TokenType.SBE:
-                        currentEndian = Endian.Big; 
+                        currentEndian = Endian.Big;
+                        break;
+                    case TokenType.OFFSET:
+                        currentGotoOffset = (long) Advance().Literal;
                         break;
                     default:
                         {
@@ -62,7 +70,15 @@ namespace EpicFilePatcher
                             {
                                 break;
                             }
-                            handler.Handle(ref writer, Advance());
+
+                            try
+                            {
+                                handler.Handle(ref writer, Advance());
+                            } 
+                            catch (Exception e)
+                            {
+                                ConsoleLogger.Log(LogType.Error, "Error handling token#" + (position - 1) + " with handler [" + handler.GetType().FullName + "]: " + e);
+                            }
                         }
                         break;
                 }

@@ -12,6 +12,9 @@ namespace EpicFilePatcher.Common
 
         // Operations
         WRITE,
+        INT16,
+        INT32,
+        INT64,
         APPEND,
 
         GOTO,
@@ -24,6 +27,7 @@ namespace EpicFilePatcher.Common
         INCLUDE,
         SLE, // switch little endian
         SBE, // switch big endian
+        OFFSET, // offset goto
 
         // types
         STRING,

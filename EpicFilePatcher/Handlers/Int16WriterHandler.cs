@@ -9,26 +9,20 @@ using System.Threading.Tasks;
 
 namespace EpicFilePatcher.Handlers
 {
-    internal class GotoHandler : ITokenHandler
+    internal class Int16WriterHandler : ITokenHandler
     {
-        public TokenType Type => TokenType.GOTO;
+        public TokenType Type => TokenType.INT16;
         public bool Handle(ref NativeWriter stream, Token token)
         {
             Debug.Assert(token.Type == TokenType.INT);
-            long data;
+            short data;
             try
             {
-                data = (long)token.Literal;
+                data = (short)token.Literal;
             }
             catch { return false; }
 
-            if (data > stream.Length) 
-            {
-                ConsoleLogger.Log(LogType.Error, $"Tried to jump to file pos [{data.ToString("X")}], but it is bigger than the size of the file.");
-                return false; 
-            }
-
-            stream.Position = data + Parser.GotoOffset;
+            stream.Write(data, Parser.Endian);
 
             return true;
         }
