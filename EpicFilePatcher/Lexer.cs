@@ -285,8 +285,33 @@ namespace EpicFilePatcher
             Consume();
             while (Peek() != '"')
             {
-                if (EndOfContext()) throw new Exception("Reached end of line while scanning string.");
-                sb.Append(Next());
+                if (EndOfContext())
+                {
+                    throw new Exception("Reached end of line while scanning string.");
+                }
+
+                char next = Next();
+                if (next == '\\') 
+                {
+                    char indicator = Next();
+                    switch(indicator)
+                    {
+                        case 'n':
+                            sb.Append('\n');
+                            break;
+                        case 't':
+                            sb.Append('\t');
+                            break;
+                        case '0':
+                            sb.Append("\0");
+                            break;
+                        default:
+                            sb.Append(indicator);
+                            break;
+                    }
+                    continue;
+                }
+                sb.Append(next);
             }
             Consume();
             return sb.ToString();
