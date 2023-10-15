@@ -17,7 +17,7 @@ namespace EpicFilePatcher.Handlers
             Debug.Assert(token.Type == TokenType.INT);
             int data;
             
-            data = (int)token.Literal;
+            data = Convert.ToInt32(token.Literal);
 
             stream.Write(data, Parser.Endian);
 

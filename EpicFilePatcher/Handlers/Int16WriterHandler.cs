@@ -18,7 +18,7 @@ namespace EpicFilePatcher.Handlers
             short data;
             try
             {
-                data = (short)token.Literal;
+                data = Convert.ToInt16(token.Literal);
             }
             catch { return false; }
 
