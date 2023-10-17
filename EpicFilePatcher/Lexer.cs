@@ -36,6 +36,10 @@ namespace EpicFilePatcher
             { "writestringn", TokenType.WRITESTRING_N },
             { "append", TokenType.APPEND },
 
+
+            { "align", TokenType.ALIGN },
+            { "alignwith", TokenType.ALIGNWITH },
+
             { "include", TokenType.INCLUDE },
             { "goto", TokenType.GOTO },
             { "offset", TokenType.OFFSET },
@@ -128,6 +132,7 @@ namespace EpicFilePatcher
                 case TokenType.INT32:
                 case TokenType.INT64:
 
+                case TokenType.ALIGN:
                 case TokenType.GOTO:
                     {
                         tokens.Add(ScanNumber());
@@ -144,6 +149,15 @@ namespace EpicFilePatcher
                             SkipWhitespace();
                         }
                         tokens.Add(new Token(TokenType.BYTEARRAY, array.ToArray()));
+                    }
+                    break;
+
+                case TokenType.ALIGNWITH:
+                    {
+                        long alignment = ReadNumber();
+                        SkipWhitespace();
+                        long writeValue = ReadNumber();
+                        tokens.Add(new Token(TokenType.INT, new long[] { alignment, writeValue }));
                     }
                     break;
 
@@ -204,6 +218,11 @@ namespace EpicFilePatcher
             }
         }
 
+
+        private long ReadNumber()
+        {
+            return (long)ScanNumber().Literal;
+        }
 
         private Token ScanNumber()
         {
@@ -293,7 +312,7 @@ namespace EpicFilePatcher
                 char next = Next();
                 if (next == '\\') 
                 {
-                    char indicator = Next();
+                    char indicator = Next().ToString().ToLower().ToCharArray()[0];
                     switch(indicator)
                     {
                         case 'n':

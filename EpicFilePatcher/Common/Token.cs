@@ -23,6 +23,10 @@ namespace EpicFilePatcher.Common
         WRITESTRING,
         WRITESTRING_N,
 
+        // align
+        ALIGN,
+        ALIGNWITH,
+
         // options
         INCLUDE,
         SLE, // switch little endian
