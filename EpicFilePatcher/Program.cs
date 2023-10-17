@@ -12,14 +12,14 @@ namespace EpicFilePatcher
 
         static void Main(string[] args)
         {
-            
+            /*
             args = new string[]
             {
                 "--debug",
                 @"E:\Workspace\Projects\SWBFII-Cinematic-Tools-Patch\main.efptxt" ,
                 @"E:\Workspace\Projects\SWBFII-Cinematic-Tools-Patch\CT_SWBF2.dll"
             };
-            
+            */
 
 
             HandleOptions(ref args);
